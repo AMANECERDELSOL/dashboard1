@@ -7,6 +7,13 @@ function Chat({ user, onLogout }) {
     const [newMessage, setNewMessage] = useState('')
     const messagesEndRef = useRef(null)
 
+    // Pedir permiso para notificaciones
+    useEffect(() => {
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission()
+        }
+    }, [])
+
     useEffect(() => {
         fetchMessages()
 
@@ -15,7 +22,16 @@ function Chat({ user, onLogout }) {
             .on(
                 'postgres_changes',
                 { event: 'INSERT', schema: 'public', table: 'chat_messages' },
-                () => fetchMessages()
+                (payload) => {
+                    fetchMessages()
+                    // Mostrar notificación si no es del usuario actual
+                    if (payload.new.user_id !== user.userId) {
+                        showNotification('Nuevo mensaje en el chat', {
+                            body: 'Hay un mensaje nuevo en el chat del equipo',
+                            icon: '/favicon.ico'
+                        })
+                    }
+                }
             )
             .subscribe()
 
@@ -43,6 +59,12 @@ function Chat({ user, onLogout }) {
             setMessages(data || [])
         } catch (error) {
             console.error('Error fetching messages:', error)
+        }
+    }
+
+    const showNotification = (title, options) => {
+        if ('Notification' in window && Notification.permission === 'granted') {
+            new Notification(title, options)
         }
     }
 
