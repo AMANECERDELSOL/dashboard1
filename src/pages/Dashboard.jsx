@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import CurrentWork from '../components/CurrentWork'
+import Navbar from '../components/Navbar'
 
 function Dashboard({ user, onLogout }) {
     const [stats, setStats] = useState({
@@ -51,25 +51,7 @@ function Dashboard({ user, onLogout }) {
 
     return (
         <div>
-            <div className="navbar">
-                <h1>☁️ Sky Web Panel</h1>
-                <nav>
-                    <Link to="/dashboard" className="active">Dashboard</Link>
-                    <Link to="/works">Trabajos</Link>
-                    <Link to="/calendar">Calendario</Link>
-                    <Link to="/hazards">Peligros</Link>
-                    {user?.role === 'ADMIN' && (
-                        <>
-                            <Link to="/monitor">Monitor</Link>
-                            <Link to="/admin">Admin</Link>
-                        </>
-                    )}
-                    <Link to="/chat">Chat</Link>
-                    <button onClick={onLogout} className="btn btn-secondary" style={{ marginLeft: '15px' }}>
-                        Cerrar Sesión
-                    </button>
-                </nav>
-            </div>
+            <Navbar user={user} onLogout={onLogout} activePage="dashboard" />
 
             <div className="container">
                 <header style={{ marginBottom: '2rem' }}>
@@ -78,7 +60,7 @@ function Dashboard({ user, onLogout }) {
                     </h2>
                     <p style={{ color: '#64748b', fontSize: '1.1rem' }}>
                         {user.role === 'ADMIN'
-                            ? 'Panel de control general y monitoreo de empleados.'
+                            ? 'Panel de control general y monitoreo de flota.'
                             : 'Aquí tienes tu asignación actual y estado.'}
                     </p>
                 </header>
@@ -129,4 +111,3 @@ function Dashboard({ user, onLogout }) {
 }
 
 export default Dashboard
-
