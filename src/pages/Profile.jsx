@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import Navbar from '../components/Navbar'
 import { supabase } from '../lib/supabase'
 
 function Profile({ user, onLogout }) {
@@ -107,26 +107,7 @@ function Profile({ user, onLogout }) {
 
     return (
         <div>
-            <div className="navbar">
-                <h1>☁️ Sky Web Panel</h1>
-                <nav>
-                    <Link to="/dashboard">Dashboard</Link>
-                    <Link to="/works">Trabajos</Link>
-                    <Link to="/calendar">Calendario</Link>
-                    <Link to="/hazards">Peligros</Link>
-                    {user?.role === 'ADMIN' && (
-                        <>
-                            <Link to="/monitor">Monitor</Link>
-                            <Link to="/admin">Admin</Link>
-                        </>
-                    )}
-                    <Link to="/chat">Chat</Link>
-                    <Link to="/profile" className="active">Perfil</Link>
-                    <button onClick={onLogout} className="btn btn-secondary">
-                        Cerrar Sesión
-                    </button>
-                </nav>
-            </div>
+            <Navbar user={user} onLogout={onLogout} activePage="profile" />
 
             <div className="container">
                 <div className="card">
