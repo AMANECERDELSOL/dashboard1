@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import Login from './pages/Login'
+import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 import WorkList from './pages/WorkList'
 import Calendar from './pages/Calendar'
@@ -55,6 +56,14 @@ function App() {
                         isAuthenticated ?
                             <Navigate to="/dashboard" /> :
                             <Login onLogin={handleLogin} />
+                    }
+                />
+                <Route
+                    path="/register"
+                    element={
+                        isAuthenticated ?
+                            <Navigate to="/dashboard" /> :
+                            <Register />
                     }
                 />
                 <Route
