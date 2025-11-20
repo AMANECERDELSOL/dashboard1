@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import CurrentWork from '../components/CurrentWork'
 import Navbar from '../components/Navbar'
