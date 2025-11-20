@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import Navbar from '../components/Navbar'
 import { supabase } from '../lib/supabase'
 
 function AdminPanel({ user, onLogout }) {
@@ -37,7 +37,6 @@ function AdminPanel({ user, onLogout }) {
 
             if (error) throw error
 
-            // Actualizar lista localmente
             setTechnicians(technicians.map(tech =>
                 tech.id === techId ? { ...tech, is_active: !currentStatus } : tech
             ))
@@ -51,20 +50,7 @@ function AdminPanel({ user, onLogout }) {
 
     return (
         <div>
-            <div className="navbar">
-                <h1>☁️ Sky Web Panel</h1>
-                <nav>
-                    <Link to="/dashboard">Dashboard</Link>
-                    <Link to="/works">Trabajos</Link>
-                    <Link to="/calendar">Calendario</Link>
-                    <Link to="/hazards">Peligros</Link>
-                    <Link to="/admin" className="active">Admin</Link>
-                    <Link to="/chat">Chat</Link>
-                    <button onClick={onLogout} className="btn btn-secondary" style={{ marginLeft: '15px' }}>
-                        Cerrar Sesión
-                    </button>
-                </nav>
-            </div>
+            <Navbar user={user} onLogout={onLogout} activePage="admin" />
 
             <div className="container">
                 <div className="card">
