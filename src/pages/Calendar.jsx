@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import Navbar from '../components/Navbar'
 
 function Calendar({ user, onLogout }) {
     const [works, setWorks] = useState([])
@@ -25,7 +25,6 @@ function Calendar({ user, onLogout }) {
 
     const fetchWorks = async () => {
         try {
-            // Get first and last day of current month
             const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
             const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0)
 
@@ -96,17 +95,12 @@ function Calendar({ user, onLogout }) {
         const startingDayOfWeek = firstDay.getDay()
 
         const days = []
-
-        // Add empty days for alignment
         for (let i = 0; i < startingDayOfWeek; i++) {
             days.push(null)
         }
-
-        // Add actual days
         for (let day = 1; day <= daysInMonth; day++) {
             days.push(new Date(year, month, day))
         }
-
         return days
     }
 
@@ -134,27 +128,12 @@ function Calendar({ user, onLogout }) {
 
     const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
         'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
-
     const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
-
     const days = getDaysInMonth()
 
     return (
         <div>
-            <div className="navbar">
-                <h1>☁️ Sky Web Panel</h1>
-                <nav>
-                    <Link to="/dashboard">Dashboard</Link>
-                    <Link to="/works">Trabajos</Link>
-                    <Link to="/calendar" className="active">Calendario</Link>
-                    <Link to="/hazards">Peligros</Link>
-                    {user?.role === 'ADMIN' && <Link to="/admin">Admin</Link>}
-                    <Link to="/chat">Chat</Link>
-                    <button onClick={onLogout} className="btn btn-secondary" style={{ marginLeft: '15px' }}>
-                        Cerrar Sesión
-                    </button>
-                </nav>
-            </div>
+            <Navbar user={user} onLogout={onLogout} activePage="calendar" />
 
             <div className="container">
                 <div className="card">
@@ -173,7 +152,6 @@ function Calendar({ user, onLogout }) {
                         <div className="loading">Cargando calendario...</div>
                     ) : (
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '10px' }}>
-                            {/* Day names header */}
                             {dayNames.map(name => (
                                 <div key={name} style={{
                                     fontWeight: '600',
@@ -186,7 +164,6 @@ function Calendar({ user, onLogout }) {
                                 </div>
                             ))}
 
-                            {/* Calendar days */}
                             {days.map((date, index) => {
                                 if (!date) {
                                     return <div key={`empty-${index}`} />
@@ -272,7 +249,6 @@ function Calendar({ user, onLogout }) {
                     )}
                 </div>
 
-                {/* Selected date details */}
                 {selectedDate && (
                     <div className="card">
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
@@ -323,7 +299,6 @@ function Calendar({ user, onLogout }) {
                 )}
             </div>
 
-            {/* Minimalist Modal */}
             {showModal && (
                 <div className="modal-overlay">
                     <div className="modal-content">
@@ -356,11 +331,21 @@ function Calendar({ user, onLogout }) {
                                     onChange={e => setNewWork({ ...newWork, description: e.target.value })}
                                     rows="3"
                                     placeholder="Detalles del trabajo..."
-                                    style={{ width: '100%', padding: '0.625rem', borderRadius: '0.5rem', border: '1px solid #e2e8f0', fontFamily: 'inherit' }}
                                 />
                             </div>
 
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                            <div className="form-group">
+                                <label>Dirección</label>
+                                <input
+                                    type="text"
+                                    value={newWork.address}
+                                    onChange={e => setNewWork({ ...newWork, address: e.target.value })}
+                                    required
+                                    placeholder="Dirección del trabajo"
+                                />
+                            </div>
+
+                            <div className="form-row">
                                 <div className="form-group">
                                     <label>Fecha</label>
                                     <input
@@ -370,6 +355,7 @@ function Calendar({ user, onLogout }) {
                                         required
                                     />
                                 </div>
+
                                 <div className="form-group">
                                     <label>Turno</label>
                                     <select
@@ -382,44 +368,49 @@ function Calendar({ user, onLogout }) {
                                 </div>
                             </div>
 
-                            <div className="form-group">
-                                <label>Dirección</label>
-                                <input
-                                    type="text"
-                                    value={newWork.address}
-                                    onChange={e => setNewWork({ ...newWork, address: e.target.value })}
-                                    required
-                                    placeholder="Calle, Número, Colonia..."
-                                />
+                            <div className="form-row">
+                                <div className="form-group">
+                                    <label>Cliente</label>
+                                    <input
+                                        type="text"
+                                        value={newWork.client_name}
+                                        onChange={e => setNewWork({ ...newWork, client_name: e.target.value })}
+                                        placeholder="Nombre del cliente"
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <label>Teléfono</label>
+                                    <input
+                                        type="tel"
+                                        value={newWork.client_phone}
+                                        onChange={e => setNewWork({ ...newWork, client_phone: e.target.value })}
+                                        placeholder="Teléfono del cliente"
+                                    />
+                                </div>
                             </div>
 
                             <div className="form-group">
-                                <label>Cliente (Opcional)</label>
-                                <input
-                                    type="text"
-                                    value={newWork.client_name}
-                                    onChange={e => setNewWork({ ...newWork, client_name: e.target.value })}
-                                    placeholder="Nombre del cliente"
-                                />
+                                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                    <input
+                                        type="checkbox"
+                                        checked={newWork.priority}
+                                        onChange={e => setNewWork({ ...newWork, priority: e.target.checked })}
+                                    />
+                                    Marcar como prioridad alta
+                                </label>
                             </div>
 
-                            <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                <input
-                                    type="checkbox"
-                                    id="priority"
-                                    checked={newWork.priority}
-                                    onChange={e => setNewWork({ ...newWork, priority: e.target.checked })}
-                                    style={{ width: 'auto' }}
-                                />
-                                <label htmlFor="priority" style={{ margin: 0, color: '#dc2626' }}>Marcar como Prioridad Alta</label>
-                            </div>
-
-                            <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
-                                <button type="button" onClick={() => setShowModal(false)} className="btn btn-secondary" style={{ flex: 1 }}>
-                                    Cancelar
-                                </button>
-                                <button type="submit" className="btn btn-primary" style={{ flex: 1 }}>
+                            <div style={{ display: 'flex', gap: '10px', marginTop: '1.5rem' }}>
+                                <button type="submit" className="btn btn-primary">
                                     Crear Trabajo
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setShowModal(false)}
+                                    className="btn btn-secondary"
+                                >
+                                    Cancelar
                                 </button>
                             </div>
                         </form>
