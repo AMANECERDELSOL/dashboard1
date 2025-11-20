@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 
 function Login({ onLogin }) {
@@ -93,9 +94,18 @@ function Login({ onLogin }) {
                         {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
                     </button>
                 </form>
+
+                <div style={{ marginTop: '1.5rem', textAlign: 'center', color: '#64748b' }}>
+                    ¿No tienes cuenta?{' '}
+                    <Link to="/register" style={{ color: '#6366f1', fontWeight: '600', textDecoration: 'none' }}>
+                        Crear Cuenta
+                    </Link>
+                </div>
             </div>
         </div>
     )
 }
 
 export default Login
+
+
