@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import Navbar from '../components/Navbar'
 import { supabase } from '../lib/supabase'
 
 function TechMonitor({ user, onLogout }) {
@@ -9,7 +9,6 @@ function TechMonitor({ user, onLogout }) {
     useEffect(() => {
         fetchTechnicianStatus()
 
-        // Subscribe to realtime updates
         const subscription = supabase
             .channel('tech-monitor')
             .on('postgres_changes', { event: '*', schema: 'public', table: 'works' }, () => {
@@ -49,17 +48,7 @@ function TechMonitor({ user, onLogout }) {
 
     return (
         <div>
-            <div className="navbar">
-                <h1>☁️ Sky Web Panel</h1>
-                <nav>
-                    <Link to="/dashboard">Dashboard</Link>
-                    <Link to="/works">Trabajos</Link>
-                    <Link to="/calendar">Calendario</Link>
-                    <Link to="/monitor" className="active">Monitor</Link>
-                    <Link to="/admin">Admin</Link>
-                    <button onClick={onLogout} className="btn btn-secondary">Salir</button>
-                </nav>
-            </div>
+            <Navbar user={user} onLogout={onLogout} activePage="monitor" />
 
             <div className="container">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
