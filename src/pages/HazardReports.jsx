@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import Navbar from '../components/Navbar'
 import { supabase } from '../lib/supabase'
 import { getLocationWithAddress } from '../utils/geolocation'
 
@@ -20,7 +20,6 @@ function HazardReports({ user, onLogout }) {
     useEffect(() => {
         fetchReports()
 
-        // Subscribe to realtime changes
         const channel = supabase
             .channel('hazard-reports-changes')
             .on(
@@ -143,19 +142,7 @@ function HazardReports({ user, onLogout }) {
 
     return (
         <div>
-            <div className="navbar">
-                <h1>☁️ Sky Web Panel</h1>
-                <nav>
-                    <Link to="/dashboard">Dashboard</Link>
-                    <Link to="/works">Trabajos</Link>
-                    <Link to="/calendar">Calendario</Link>
-                    <Link to="/hazards">Peligros</Link>
-                    <Link to="/chat">Chat</Link>
-                    <button onClick={onLogout} className="btn btn-secondary" style={{ marginLeft: '15px' }}>
-                        Cerrar Sesión
-                    </button>
-                </nav>
-            </div>
+            <Navbar user={user} onLogout={onLogout} activePage="hazards" />
 
             <div className="container">
                 <div className="card">
