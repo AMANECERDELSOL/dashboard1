@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import Navbar from '../components/Navbar'
 
 function WorkList({ user, onLogout }) {
     const [works, setWorks] = useState([])
@@ -142,25 +142,7 @@ function WorkList({ user, onLogout }) {
 
     return (
         <div>
-            <div className="navbar">
-                <h1>☁️ Sky Web Panel</h1>
-                <nav>
-                    <Link to="/dashboard">Dashboard</Link>
-                    <Link to="/works" className="active">Trabajos</Link>
-                    <Link to="/calendar">Calendario</Link>
-                    <Link to="/hazards">Peligros</Link>
-                    {user?.role === 'ADMIN' && (
-                        <>
-                            <Link to="/monitor">Monitor</Link>
-                            <Link to="/admin">Admin</Link>
-                        </>
-                    )}
-                    <Link to="/chat">Chat</Link>
-                    <button onClick={onLogout} className="btn btn-secondary">
-                        Cerrar Sesión
-                    </button>
-                </nav>
-            </div>
+            <Navbar user={user} onLogout={onLogout} activePage="works" />
 
             <div className="container">
                 <div className="card">
