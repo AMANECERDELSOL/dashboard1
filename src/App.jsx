@@ -7,6 +7,7 @@ import Calendar from './pages/Calendar'
 import HazardReports from './pages/HazardReports'
 import AdminPanel from './pages/AdminPanel'
 import TechMonitor from './pages/TechMonitor'
+import Profile from './pages/Profile'
 import Chat from './pages/Chat'
 import './App.css'
 
@@ -109,6 +110,14 @@ function App() {
                     element={
                         isAuthenticated ?
                             <Chat user={user} onLogout={handleLogout} /> :
+                            <Navigate to="/login" />
+                    }
+                />
+                <Route
+                    path="/profile"
+                    element={
+                        isAuthenticated ?
+                            <Profile user={user} onLogout={handleLogout} /> :
                             <Navigate to="/login" />
                     }
                 />
